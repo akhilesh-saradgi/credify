@@ -1,0 +1,131 @@
+/* --- CREDIFY PREMIUM THEME --- */
+
+:root {
+  --bg-dark: #0B0F19;
+  --card-bg: #1A2235;
+  --text-light: #F3F4F6;
+  --accent-green: #10B981;
+  --accent-indigo: #6366F1;
+  --border-dark: #232E42;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 30px 20px;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* --- CARD AESTHETICS --- */
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-dark);
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  margin-bottom: 24px;
+}
+
+/* Split Layout specifically for Admin */
+.split-layout { 
+  display: flex; 
+  gap: 30px; 
+}
+@media (max-width: 768px) { 
+  .split-layout { flex-direction: column; } 
+}
+.pane { 
+  flex: 1; 
+}
+
+/* --- TYPOGRAPHY --- */
+h1, h2, h3 {
+  margin-top: 0;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+/* --- CLEAN DARK BOX INPUTS --- */
+input {
+  width: 100%;
+  padding: 14px;
+  margin: 8px 0 24px 0;
+  background-color: #111827; /* Extremely dark inner box */
+  border: 1px solid var(--border-dark);
+  color: var(--text-light);
+  border-radius: 6px;
+  box-sizing: border-box; /* Ensures padding doesn't break width */
+  font-size: 15px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--accent-indigo);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+/* --- BUTTONS & HOVER STATES --- */
+button {
+  padding: 14px 28px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.btn-primary, button[type="submit"], #analyzeBtn {
+  background-color: var(--accent-indigo);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+}
+
+.btn-primary:hover, button[type="submit"]:hover, #analyzeBtn:hover {
+  background-color: #4f46e5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+}
+
+.btn-success {
+  background-color: var(--accent-green);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
+
+.btn-success:hover {
+  background-color: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+}
+
+/* --- CERTIFICATE CAPTURE WRAPPER --- */
+/* (This applies a physical document aesthetic wrapped in a cyber-border) */
+#certificateCaptureArea {
+  background: linear-gradient(145deg, #1A2235, #111827);
+  border: 2px solid var(--accent-green);
+  border-radius: 8px;
+  padding: 40px;
+  position: relative;
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.15), inset 0 0 20px rgba(0,0,0,0.5);
+  text-align: center;
+}
+
+/* Adds a secure document "watermark" border line */
+#certificateCaptureArea::before {
+  content: '';
+  position: absolute;
+  top: 12px; left: 12px; right: 12px; bottom: 12px;
+  border: 1px dashed rgba(16, 185, 129, 0.4);
+  pointer-events: none;
+}

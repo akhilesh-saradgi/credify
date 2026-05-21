@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credify Verification</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container" id="mainContainer" style="max-width: 600px; margin-top: 40px;">
+        <div class="card" id="statusCard" style="text-align: center; border-color: var(--accent-green); box-shadow: 0 0 30px rgba(16, 185, 129, 0.15);">
+            <div style="font-size: 64px; margin-bottom: 10px;">✅</div>
+            <h2 style="color: var(--accent-green); margin: 0;">CREDIFY AUTHENTIC</h2>
+            <p style="color: #9ca3af; margin-top: 5px;">Immutable Record Verified</p>
+        </div>
+
+        <div class="card">
+            <h3 style="border-bottom: 1px solid var(--border-dark); padding-bottom: 12px; margin-bottom: 20px;">Secure Data Payload</h3>
+            <p style="font-size: 18px;"><strong>Name:</strong> <span style="color: var(--accent-indigo);">Satoshi Nakamoto</span></p>
+            <p style="font-size: 18px;"><strong>Score:</strong> <span>99/100</span></p>
+            <p style="font-size: 18px;"><strong>Attendance:</strong> <span>100%</span></p>
+        </div>
+        
+        <script>
+            // This script checks if there is a hash in the URL.
+            // If someone tries to load the page without a hash, it triggers the Forgery screen.
+            const hash = new URLSearchParams(window.location.search).get('hash');
+            if(!hash) {
+                document.body.style.background = "#2a0808"; // Deep red alert background
+                document.getElementById('mainContainer').innerHTML = "<h1 style='color:#ef4444; text-align:center; margin-top:50px;'>🚨 FORGERY DETECTED<br><span style='font-size: 20px; color: #fca5a5;'>No cryptographic signature found.</span></h1>";
+            }
+        </script>
+    </div>
+</body>
+</html>
