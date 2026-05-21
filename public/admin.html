@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head><link rel="stylesheet" href="style.css"></head>
+<body>
+    <div class="card">
+        <h2>Company Entry</h2>
+        <form id="issueForm">
+            <input type="text" id="studentName" placeholder="Student Name" required>
+            <input type="number" id="examScore" placeholder="Score" required>
+            <input type="number" id="attendance" placeholder="Attendance" required>
+            <button type="submit">Submit Certificate</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('issueForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                studentName: document.getElementById('studentName').value,
+                examScore: document.getElementById('examScore').value,
+                attendance: document.getElementById('attendance').value
+            };
+            const res = await fetch('/api/issue', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+            const data = await res.json();
+            alert(data.success ? 'Success! Hash: ' + data.hash : 'Error');
+        });
+    </script>
+</body>
+</html>

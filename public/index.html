@@ -1,127 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Credify Student Dashboard</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-</head>
+<html>
+<head><link rel="stylesheet" href="style.css"></head>
 <body>
-    <div class="container">
-        <h1>Welcome to Credify</h1>
-        
-        <div class="card">
-            <h3>🔗 Link Your Project Credentials</h3>
-            <input type="text" id="repoUrl" placeholder="Paste GitHub Repository URL (e.g., https://github.com/user/repo)">
-            <button class="btn-primary" id="btnCheckRepo">Analyze Commits</button>
-        </div>
-
-        <div class="card" style="border: 2px solid var(--accent-green);">
-            <h2>📜 Your Verified Certificate</h2>
-            <p>Status: <strong style="color: var(--accent-green);">Approved & Anchored</strong></p>
-            
-            <div id="certificateCaptureArea" style="margin: 20px 0; padding: 40px; background: #1A2235; text-align: center; border: 2px dashed #6366F1; border-radius: 8px;">
-                <h1 style="color: #10B981; font-size: 32px; letter-spacing: 1px;">CREDENTIAL CERTIFICATE</h1>
-                <h3 id="certName" style="color: #ffffff; font-size: 24px; margin-top: 20px;">[Student Name Placeholder]</h3>
-                <p style="color: #9CA3AF; max-width: 500px; margin: 0 auto; line-height: 1.6;">
-                    Has successfully satisfied all operational attendance markers and verified practical repository contributions managed via the local computer science division.
-                </p>
-                
-                <div style="margin-top: 30px;">
-                    <img id="certificateQr" src="" style="width:140px; height:140px; background:#fff; padding: 5px; display:inline-block; border-radius: 4px;" alt="Verification Seal">
-                    <p style="font-size: 11px; color: #6366F1; margin-top: 5px; font-family: monospace;">SECURE INTEGRITY LEDGER ANCHOR</p>
-                </div>
-            </div>
-            
-            <button class="btn-success" id="btnDownload">Download Signed PDF</button>
-        </div>
+    <div class="card">
+        <h2>Check GitHub Commits</h2>
+        <input type="text" id="repoInput" placeholder="owner/repo (e.g., facebook/react)">
+        <button id="analyzeBtn">Analyze</button>
     </div>
-
-    <script>
-        // Setup placeholder metadata hash to simulate standard database retrieval parameters
-        const sampleActiveHash = "sha256-4a8f3b2c1d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f";
-
-        // Generate the verification URL targeting your public validation screen portal
-        const verificationUrl = `http://localhost:5000/verify.html?hash=${sampleActiveHash}`;
-        
-        // Dynamically request the live QR verification image using a standard open-source rendering API endpoint
-        document.getElementById('certificateQr').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verificationUrl)}`;
-        document.getElementById('certName').innerText = "Akhilesh Saradgi"; // Injecting your profile name into the node state element
-
-        // 1. HANDLER FOR PDF DOWNLOAD
-        document.getElementById('btnDownload').addEventListener('click', () => {
-            const elementToPrint = document.getElementById('certificateCaptureArea');
+   <script>
+        document.getElementById('analyzeBtn').addEventListener('click', async () => {
+            const repoValue = document.getElementById('repoInput').value.trim();
             
-            const printConfigurations = {
-                margin:       10,
-                filename:     'Credify-Verified-Certificate.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true }, // Scale 2 ensures crystal clear fonts upon rendering elements
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' } // Set to landscape layout for elite certification view layout
-            };
-
-            html2pdf().set(printConfigurations).from(elementToPrint).save();
-        });
-
-        // 2. HANDLER FOR GITHUB ANALYSIS & LIVE UI INJECTION
-        document.getElementById('btnCheckRepo').addEventListener('click', async () => {
-            const repoUrl = document.getElementById('repoUrl').value.trim();
-            if (!repoUrl) {
-                alert('Please paste a public GitHub repository link first.');
-                return;
+            if (!repoValue || !repoValue.includes('/')) {
+                return alert('Please enter a valid format: owner/repo (e.g., facebook/react)');
             }
 
-            const btn = document.getElementById('btnCheckRepo');
-            btn.innerText = 'Analyzing Commits...';
-            btn.disabled = true;
+            const button = document.getElementById('analyzeBtn');
+            button.innerText = 'Analyzing...';
 
             try {
-                const response = await fetch(`/api/github-check?repoUrl=${encodeURIComponent(repoUrl)}`);
-                const result = await response.json();
+                // Corrected to match your exact server query parameter layout
+                const res = await fetch(`/api/github-check?repo=${repoValue}`);
+                const data = await res.json();
 
-                if (result.success) {
-                    // Remove any old contributor elements if they exist
-                    let oldBox = document.getElementById('gitContributorsBox');
-                    if (oldBox) oldBox.remove();
-
-                    // Create a sleek container element to display the metrics visually
-                    const metricsBox = document.createElement('div');
-                    metricsBox.id = 'gitContributorsBox';
-                    metricsBox.style.marginTop = '20px';
-                    metricsBox.style.padding = '15px';
-                    metricsBox.style.background = '#1A2235';
-                    metricsBox.style.borderRadius = '8px';
-                    metricsBox.style.border = '1px solid #6366F1';
-
-                    let teamHTML = `<h4 style="margin-top:0;">📊 Verified Repository Contribution Split:</h4><ul style="list-style:none; padding:0; margin:0;">`;
-                    
-                    // Loop through each contributor returned by your backend Express route
-                    result.teamBreakdown.forEach(user => {
-                        teamHTML += `
-                            <li style="display:flex; align-items:center; gap:15px; margin-bottom:12px; background:#232E42; padding:8px; border-radius:6px;">
-                                <img src="${user.avatar}" style="width:35px; height:35px; border-radius:50%; border:2px solid #10B981;">
-                                <div>
-                                    <strong style="color:#ffffff;">${user.username}</strong> <br>
-                                    <span style="font-size:12px; color:#10B981;">${user.commits} Commits (${user.percentage}%)</span>
-                                </div>
-                            </li>
-                        `;
-                    });
-                    teamHTML += `</ul>`;
-                    metricsBox.innerHTML = teamHTML;
-
-                    // Append this container right under the input field box area layout
-                    btn.parentNode.appendChild(metricsBox);
-                    alert('Repository metrics calculated and injected successfully!');
+                if (data.success) {
+                    // Your backend array contains objects inside the 'metrics' list
+                    const topContributor = data.metrics[0];
+                    alert(`Analysis Success! Found ${data.metrics.length} verified contributors. Top coder: ${topContributor.username} with ${topContributor.totalCommits} commits!`);
+                    console.log('Full Repository Contribution Metrics Data Grid:', data.metrics);
                 } else {
-                    alert('Engine Error: ' + result.error);
+                    alert(`Engine Error: ${data.error}`);
                 }
-            } catch (error) {
-                console.error('Fetch error:', error);
-                alert('Failed to connect to backend server. Is server.js running?');
+            } catch (err) {
+                console.error(err);
+                alert('Failed to communicate with your backend orchestrator engine.');
             } finally {
-                btn.innerText = 'Analyze Commits';
-                btn.disabled = false;
+                button.innerText = 'Analyze';
             }
         });
     </script>
