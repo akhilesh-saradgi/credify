@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+=<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -53,7 +53,7 @@
         .form-group { margin-bottom: 18px; display: flex; flex-direction: column; gap: 8px; }
         label { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
         input, select { background: #0f0f1a; border: 1px solid #24243e; padding: 12px; border-radius: 6px; color: var(--text-main); font-size: 15px; outline: none; transition: border 0.2s; }
-        input:focus { border-color: var(--accent); }
+        input:focus, select:focus { border-color: var(--accent); }
         input[readonly] { background: #0a0a12 !important; color: var(--text-muted); cursor: not-allowed; }
         
         .btn-action { background: var(--accent); color: white; border: none; padding: 14px; border-radius: 6px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background 0.2s; width: 100%; margin-top: 5px; }
@@ -114,7 +114,7 @@
                     <div class="form-group">
                         <label>Select Stream Category</label>
                         <select id="entityType" onchange="updateFormDropdowns()">
-                            <option value="fest">🏆 National Level Tech Fests (NIRMAN 2K26)</option>
+                            <option value="fest">🏆 College Level Tech Fests (NIRMAN 2K26)</option>
                             <option value="club">♣️ Approved Student Clubs & Councils</option>
                             <option value="academic">🏢 Core Academic Departments</option>
                             <option value="course">🎓 Professional Certification Courses</option>
@@ -132,12 +132,12 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label id="categoryLabel">Fest Umbrella Group</label>
+                        <label id="categoryLabel">Tech Fest Brand</label>
                         <select id="certCategory" onchange="updateSubCategoryDropdown()">
                             </select>
                     </div>
-                    <div class="form-group" id="subCategoryGroup">
-                        <label id="subCategoryLabel">Specific Event Track</label>
+                    <div class="form-group">
+                        <label>Specific Event Track</label>
                         <select id="certSubCategory">
                             </select>
                     </div>
@@ -221,17 +221,16 @@
     <script>
         let liveStagedRecord = null;
 
-        // Configuration mapping for dynamic multi-level selection filters
         const streamOptions = {
             fest: {
                 categoryLabel: "Tech Fest Brand",
                 authorityLabel: "Authorized Signee Representative",
                 defaultSignee: "Dr. S. R. Patil (NIRMAN Convenor)",
-                categories: ["NIRMAN 2K26 National Tech Fest"],
+                categories: ["NIRMAN 2K26 College Level Tech Fest"],
                 subCategories: {
-                    "NIRMAN 2K26 National Tech Fest": [
-                        "CodeXelethon (National Coding Hackathon)",
-                        "National Level Technical Debate Showcase",
+                    "NIRMAN 2K26 College Level Tech Fest": [
+                        "CodeXelethon (Intra-College Coding Hackathon)",
+                        "College Level Technical Debate Showcase",
                         "Slideshow (Technical Paper Presentation)"
                     ]
                 }
@@ -270,6 +269,13 @@
                 }
             }
         };
+
+        function switchView(panelId, element) {
+            document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(panelId).classList.add('active');
+            element.classList.add('active');
+        }
 
         function updateFormDropdowns() {
             const streamKey = document.getElementById('entityType').value;
@@ -317,7 +323,7 @@
             const finalEvent = document.getElementById('certSubCategory').value;
 
             let creditAllocation = "Standard Curricular System Record";
-            if (type === 'fest') creditAllocation = "+5 Executive Grace Marks Approved";
+            if (type === 'fest') creditAllocation = "+4 Internal Grace Marks Staged";
             if (type === 'club') creditAllocation = "+3 Activity Ledger Marks Staged";
             if (type === 'course') creditAllocation = "Autonomous Credit Transfer Verified";
 
@@ -415,11 +421,11 @@
                     renderVerificationFailure(container, "Tampered Certificate Block Checksum Mismatch.");
                 } else {
                     const name = liveStagedRecord ? liveStagedRecord.studentName : "Akhilesh Saradgi";
-                    const track = liveStagedRecord ? liveStagedRecord.category : "NIRMAN 2K26 National Tech Fest — CodeXelethon (National Coding Hackathon)";
+                    const track = liveStagedRecord ? liveStagedRecord.category : "NIRMAN 2K26 College Level Tech Fest — CodeXelethon (Intra-College Coding Hackathon)";
                     const score = liveStagedRecord ? liveStagedRecord.examScore : 98;
                     const teacher = liveStagedRecord ? liveStagedRecord.teacher : "Dr. S. R. Patil (NIRMAN Convenor)";
                     const repo = liveStagedRecord ? liveStagedRecord.repoUrl : "akhilesh-saradgi/credify";
-                    const incentive = liveStagedRecord ? liveStagedRecord.graceCredits : "+5 Executive Grace Marks Approved";
+                    const incentive = liveStagedRecord ? liveStagedRecord.graceCredits : "+4 Internal Grace Marks Staged";
 
                     renderCertificateCanvas(container, name, track, score, teacher, repo, incentive, hash);
                 }
@@ -472,7 +478,6 @@
                 </div>`;
         }
 
-        // Run initialization setup
         document.addEventListener("DOMContentLoaded", function() {
             updateFormDropdowns();
         });
